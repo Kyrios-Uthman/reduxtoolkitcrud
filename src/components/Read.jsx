@@ -9,10 +9,32 @@ const Read = () => {
   const [id, setId] = useState();
   const [popup, setPopup] = useState(false);
   const [radioData, setRadioData] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
+
   const { users, searchUser } = useSelector((state) => state.app);
   useEffect(() => {
     dispatch(readUser());
-  }, []);
+    setTotal(Math.ceil(users.length / 2));
+  }, [users]);
+  function handleChange(page) {
+    setCurrentPage(page);
+  }
+  function next() {
+    if (currentPage > total) {
+      setCurrentPage(currentPage + 1);
+    }
+  }
+  function prev() {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  }
+  let itempage = 2;
+  let start = (currentPage - 1) * itempage;
+  let end = start + itempage;
+  let displaydata = users.slice(start, end);
+
   return (
     <section class="text-gray-600 body-font">
       <div class="container px-5 py-24 mx-auto">
@@ -32,8 +54,8 @@ const Read = () => {
             type="radio"
             className="form-check-input"
             name="gender"
-            checked={radioData===""}
-            onChange={(e)=>setRadioData("")}
+            checked={radioData === ""}
+            onChange={(e) => setRadioData("")}
           />
           <label className="form-check-label  ml-2">All</label>
           <input
@@ -61,7 +83,6 @@ const Read = () => {
                   Name
                 </th>
                 <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                  
                   Email
                 </th>
                 <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
@@ -83,55 +104,65 @@ const Read = () => {
               </tr>
             </thead>
             <tbody>
-              {users &&
-                users
-                  .filter((elm) => {
-                    if (searchUser && searchUser === 0) {
-                      return elm;
-                    } else {
-                      return elm.name
-                        .toLowerCase()
-                        .includes(searchUser && searchUser.toLowerCase());
-                    }
-                  })
-                  .filter((elm) => {
-                    if (radioData === "Male") {
-                      return elm.gender === radioData;
-                    } else if (radioData === "Female") {
-                      return elm.gender === radioData;
-                    } else {
-                      return elm;
-                    }
-                  })
-                  .map((item) => (
-                    <tr>
-                      <td class="px-4 py-3">{item.name}</td>
-                      <td class="px-4 py-3">{item.email}</td>
-                      <td class="px-4 py-3">{item.nickname}</td>
-                      <td class="px-4 py-3 text-lg text-gray-900">
-                        {item.gender}
-                      </td>
-                      <td class="border-t-2 border-gray-200 w-10 text-center">
-                        <Link
-                          onClick={() => {
-                            setId(item.id), setPopup(true);
-                          }}
-                        >
-                          View
-                        </Link>
-                      </td>
-                      <td class="border-t-2 border-gray-200 w-10 text-center">
-                        <Link to={`/edit/${item.id}`}>Edit</Link>
-                      </td>
-                      <td class="border-t-2 border-gray-200 w-10 text-center">
-                        <Link onClick={() => dispatch(deleteUser(item.id))}>
-                          Delete
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
+              {displaydata && displaydata.length > 0
+                ? displaydata
+                    .filter((elm) => {
+                      if (searchUser && searchUser === 0) {
+                        return elm;
+                      } else {
+                        return elm.name
+                          .toLowerCase()
+                          .includes(searchUser && searchUser.toLowerCase());
+                      }
+                    })
+                    .filter((elm) => {
+                      if (radioData === "Male") {
+                        return elm.gender === radioData;
+                      } else if (radioData === "Female") {
+                        return elm.gender === radioData;
+                      } else {
+                        return elm;
+                      }
+                    })
+                    .map((item) => (
+                      <tr>
+                        <td class="px-4 py-3">{item.name}</td>
+                        <td class="px-4 py-3">{item.email}</td>
+                        <td class="px-4 py-3">{item.nickname}</td>
+                        <td class="px-4 py-3 text-lg text-gray-900">
+                          {item.gender}
+                        </td>
+                        <td class="border-t-2 border-gray-200 w-10 text-center">
+                          <Link
+                            onClick={() => {
+                              setId(item.id), setPopup(true);
+                            }}
+                          >
+                            View
+                          </Link>
+                        </td>
+                        <td class="border-t-2 border-gray-200 w-10 text-center">
+                          <Link to={`/edit/${item.id}`}>Edit</Link>
+                        </td>
+                        <td class="border-t-2 border-gray-200 w-10 text-center">
+                          <Link onClick={() => dispatch(deleteUser(item.id))}>
+                            Delete
+                          </Link>
+                        </td>
+                      </tr>
+                    ))
+                : ""}
             </tbody>
           </table>
+          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-red" onClick={prev}>Prev</button>
+          {Array.from({ length: total }, (_, i) => {
+            return (
+              <button className="bg-red-500 text-white px-4 py-2 mx-2 rounded-md hover:bg-red-600 focus:outline-none focus:shadow-outline-red" key={i} onClick={() => handleChange(i + 1)}>
+                {i + 1}
+              </button>
+            );
+          })}
+          <button className="bg-blue-500 text-white px-4 py-2 mx-2 rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-red" onClick={next}>Next</button>
         </div>
       </div>
     </section>

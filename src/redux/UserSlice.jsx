@@ -91,6 +91,7 @@ const UserSlice = createSlice({
     users: [],
     loading: false,
     searchUser: [],
+    pagination:[],
   },
   reducers: {
     searchUser: (state, action) => {
@@ -118,6 +119,8 @@ const UserSlice = createSlice({
     [readUser.rejected]: (state, action) => {
       state.loading = false;
     },
+  
+  
     [deleteUser.pending]: (state) => {
       state.loading = true;
     },
