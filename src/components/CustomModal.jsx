@@ -20,8 +20,8 @@ const CustomModal = ({ id, popup, setPopup }) => {
         <h3  className="text-xl font-semibold text-blue-700 italic underline">Nickname</h3>
         <h3 class="text-lg font-semibold text-gray-800 mb-1">{singleuser[0].nickname}</h3>
         <button
-          class="text-gray-700 hover:text-red-500 focus:outline-none absolute top-10"
-          style={{ right: "540px" }}
+          class="text-gray-700 hover:text-red-500 focus:outline-none absolute"
+          style={{ right: "540px",top:"72px" }}
           onClick={() => setPopup(false)}
         >
           Close
