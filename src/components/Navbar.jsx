@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { searchUser } from "../redux/UserSlice";
+import { readUser, searchUser } from "../redux/UserSlice";
 
 const Navbar = () => {
-  const allusers = useSelector((state) => state.app.users);
+  const {users} = useSelector((state) => state.app);
   const [searchData, setsearchUser] = useState("");
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(searchUser(searchData));
-  }, [searchData]);
+    dispatch(readUser())
+  }, [searchData,users]);
 
   return (
     <header className="text-gray-600 body-font">
@@ -27,7 +28,7 @@ const Navbar = () => {
             to={"/read"}
             className="mr-5 hover:text-gray-900 cursor-pointer"
           >
-            All Post ({allusers && allusers.length})
+            All Post ({users && users.length})
           </Link>
         </nav>
         <input
