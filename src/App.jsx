@@ -14,8 +14,6 @@ function App() {
           <Routes>
             <Route path='/' element={<Create />} />
             <Route path='/read' element={<Read />} />
-            <Route path='/edit/:id' element={<Update />} />
-
           </Routes>
           </BrowserRouter>
     </>

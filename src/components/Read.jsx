@@ -3,11 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { deleteUser, readUser } from "../redux/UserSlice";
 import Modal from "./CustomModal";
+import UpdateModal from "./UpdateModal";
 
 const Read = () => {
   const dispatch = useDispatch();
   const [id, setId] = useState();
+  const [editid,seteditid] = useState();
   const [popup, setPopup] = useState(false);
+  const [epopup, setePopup] = useState(false);
   const [radioData, setRadioData] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);
@@ -15,8 +18,11 @@ const Read = () => {
   const { users, searchUser } = useSelector((state) => state.app);
   useEffect(() => {
     dispatch(readUser());
+  }, []);
+  useEffect(()=>{
     setTotal(Math.ceil(users.length / 2));
-  }, [users]);
+
+  },[users])
   function handleChange(page) {
     setCurrentPage(page);
   }
@@ -41,7 +47,9 @@ const Read = () => {
         <div class="flex flex-col text-center w-full mb-20">
           <h1 class="sm:text-4xl text-3xl font-medium title-font mb-2 text-gray-900">
             All Data
+
           </h1>
+          {epopup ? <UpdateModal editid={editid} epopup={epopup} setePopup={setePopup} /> : false}
           {popup ? <Modal id={id} popup={popup} setPopup={setPopup} /> : false}
           <p class="lg:w-2/3 mx-auto leading-relaxed text-base">
             Banh mi cornhole echo park skateboard authentic crucifix neutra
@@ -142,7 +150,7 @@ const Read = () => {
                           </Link>
                         </td>
                         <td class="border-t-2 border-gray-200 w-10 text-center">
-                          <Link to={`/edit/${item.id}`}>Edit</Link>
+                          <Link onClick={()=>[setePopup(true),seteditid(item.id)]}>Edit</Link>
                         </td>
                         <td class="border-t-2 border-gray-200 w-10 text-center">
                           <Link onClick={() => dispatch(deleteUser(item.id))}>

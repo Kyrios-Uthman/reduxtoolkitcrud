@@ -33,7 +33,7 @@ export const readUser = createAsyncThunk(
     );
 
     try {
-      const result = response.json();
+      const result = await response.json();
       return result;
     } catch (error) {
       return rejectWithValue(error);
@@ -53,7 +53,7 @@ export const deleteUser = createAsyncThunk(
     );
 
     try {
-      const result = response.json();
+      const result =  await response.json();
       return result;
     } catch (error) {
       console.log(error);
@@ -65,6 +65,7 @@ export const deleteUser = createAsyncThunk(
 export const updateUser = createAsyncThunk(
   "updateUser",
   async (data, { rejectWithValue }) => {
+    console.log(data)
     const response = await fetch(
       `https://654be4eb5b38a59f28efdc04.mockapi.io/crud/${data.id}`,
       {
@@ -76,7 +77,7 @@ export const updateUser = createAsyncThunk(
       }
     );
     try {
-      const result = response.json();
+      const result = await response.json();
       console.log(result);
       return result;
     } catch (error) {
