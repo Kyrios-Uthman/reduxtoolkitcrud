@@ -81,7 +81,7 @@ export const updateUser = createAsyncThunk(
       console.log(result);
       return result;
     } catch (error) {
-      console.log(error);
+      rejectWithValue(error)
     }
   }
 );
